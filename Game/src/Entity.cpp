@@ -2,13 +2,30 @@
 
 #include "raymath.h"
 
-static void Update_Character(Entity& entity, bool collision, float deltaTime)
+static Vector2 GetMovement_Character()
 {
+	static Vector2 Right{0.5f, 0.0f};
+	
+	if (IsKeyDown(KEY_D))
+	{
+		return Right;
+	}
+	if (IsKeyDown(KEY_A))
+	{
+		return Vector2Scale(Right, -1);
+	}
+
+	return Vector2Scale(Right, 0.0f);
+}
+
+static void Update_Character(Entity& entity, const Vector2& movementDirection, bool collision, float deltaTime)
+{
+	Vector2 newAcceleration = Vector2Add(entity.Acceleration, movementDirection);
+	Vector2 currentAcceleration = Vector2Scale(newAcceleration, deltaTime);
+
 	if (collision)
 	{
-		Vector2 acceleration = Vector2Scale(entity.Acceleration, deltaTime);
-		Vector2 newVelocity = Vector2Add(Vector2{ entity.Velocity.x, -0.25f }, acceleration);
-		
+		Vector2 newVelocity = Vector2Add(Vector2{ entity.Velocity.x, -0.25f }, currentAcceleration);
 		Vector2 newPosition = Vector2Add(entity.Position, newVelocity);
 		
 		entity.Velocity = newVelocity;
@@ -16,9 +33,7 @@ static void Update_Character(Entity& entity, bool collision, float deltaTime)
 		return;
 	}
 
-	Vector2 acceleration = Vector2Scale(entity.Acceleration, deltaTime);
-	Vector2 newVelocity = Vector2Add(entity.Velocity, acceleration);
-
+	Vector2 newVelocity = Vector2Add(entity.Velocity, currentAcceleration);
 	Vector2 newPosition = Vector2Add(entity.Position, newVelocity);
 
 	entity.Velocity = newVelocity;
@@ -48,13 +63,15 @@ static bool CheckCollision_Character(Entity& character, const std::vector<Entity
 void UpdateLogic(std::vector<Entity>& entities, float deltaTime)
 {
 	bool collision = false;
+	Vector2 movement = Vector2{ 0.0f, 0.0f };
 	for (Entity& entity : entities)
 	{
 		switch (entity.Type)
 		{
 		case EntityType::Character:
 			collision = CheckCollision_Character(entity, entities);
-			Update_Character(entity, collision, deltaTime);
+			movement = GetMovement_Character();
+			Update_Character(entity, movement, collision, deltaTime);
 			break;
 		default:
 			break;

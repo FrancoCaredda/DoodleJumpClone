@@ -3,6 +3,7 @@
 #include "raylib.h"
 
 #include <cstdint>
+#include <cstdlib>
 
 void Game::Run()
 {
@@ -13,6 +14,8 @@ void Game::Run()
 
 void Game::Init()
 {
+	srand(time(0));
+
 	uint32_t width = 1200;
 	uint32_t height = 900;
 
@@ -32,16 +35,21 @@ void Game::Init()
 		EntityType::Character
 	});
 
-	m_Enitities.emplace_back(Entity{
-		Vector2{ width / 2.0f, height / 2.0f + 200.0f },
-		Vector2{ 0.5f, 0.5f },
-		0.0f,
-		&Spritesheet::Platform1,
-		Vector2{ 0.0f, 0.0f },
-		Vector2{ 0.0f, 0.0 },
-		true,
-		EntityType::Platform
-	});
+	for (int i = 0; i < 10; i++)
+	{
+		m_Enitities.emplace_back(Entity{
+			Vector2{ static_cast<float>(rand() % width), static_cast<float>(rand() % height) },
+			Vector2{ 0.5f, 0.5f },
+			0.0f,
+			&Spritesheet::Platform1,
+			Vector2{ 0.0f, 0.0f },
+			Vector2{ 0.0f, 0.0 },
+			true,
+			EntityType::Platform
+		});
+	}
+
+	
 }
 
 void Game::RunLoop()
@@ -52,6 +60,7 @@ void Game::RunLoop()
 		ClearBackground(Color{});
 
 		UpdateLogic(m_Enitities, GetFrameTime());
+		m_Renderer.RenderBackground();
 		m_Renderer.RenderEntities(m_Enitities, m_Spritesheet);
 		m_Renderer.RenderRectangles(m_Enitities);
 		DrawFPS(0, 0);

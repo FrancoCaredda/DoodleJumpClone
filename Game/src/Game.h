@@ -21,6 +21,6 @@ private:
 	void Close();
 private:
 	Spritesheet m_Spritesheet;
-	Renderer m_Renderer;
+	Renderer m_Renderer{1200, 900};
 	std::vector<Entity> m_Enitities;
 };

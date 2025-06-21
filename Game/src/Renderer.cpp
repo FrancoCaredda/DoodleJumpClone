@@ -2,6 +2,16 @@
 
 #include "raylib.h"
 
+void Renderer::RenderBackground()
+{
+	if (!IsRenderTextureValid(m_BackgroundFramebuffer))
+	{
+		BakeBackground();
+	}
+
+	DrawTexture(m_BackgroundFramebuffer.texture, 0, 0, RAYWHITE);
+}
+
 void Renderer::RenderEntity(const Entity& entity, const Spritesheet& spritesheet)
 {
 	DrawTexturePro(
@@ -32,4 +42,23 @@ void Renderer::RenderRectangles(const std::vector<Entity>& entities)
 
 		DrawRectangleLines(rect.x, rect.y, rect.width, rect.height, Color{ 255, 0, 0, 255 });
 	}
+}
+
+void Renderer::BakeBackground()
+{
+	m_BackgroundFramebuffer = LoadRenderTexture(m_FramebufferWidth, m_FramebufferHeight);
+	
+	BeginTextureMode(m_BackgroundFramebuffer);
+	ClearBackground(RAYWHITE);
+	
+	uint32_t xOffset = m_FramebufferWidth / m_BackgroundLinesCount;
+	uint32_t yOffset = m_FramebufferHeight / m_BackgroundLinesCount;
+
+	for (uint32_t i = 0; i < m_BackgroundLinesCount; i++)
+	{
+		DrawLine(xOffset * (i + 1), 0, xOffset * (i + 1), m_FramebufferHeight, Color{ 0, 0, 0, 45 });
+		DrawLine(0, yOffset * (i + 1), m_FramebufferWidth, yOffset * (i + 1), Color{ 0, 0, 0, 45 });
+	}
+
+	EndTextureMode();
 }
