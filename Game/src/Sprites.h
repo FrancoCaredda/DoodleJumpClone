@@ -27,6 +27,7 @@ public:
 	static const Sprite Doodle2;
 	static const Sprite Doodle3;
 	static const Sprite Doodle4;
+	static const Sprite Platform1;
 private:
 	Texture2D m_Texture;
 };

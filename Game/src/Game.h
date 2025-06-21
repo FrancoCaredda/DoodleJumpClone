@@ -2,6 +2,7 @@
 
 #include "Sprites.h"
 #include "Entity.h"
+#include "Renderer.h"
 
 #include <vector>
 
@@ -20,5 +21,6 @@ private:
 	void Close();
 private:
 	Spritesheet m_Spritesheet;
+	Renderer m_Renderer;
 	std::vector<Entity> m_Enitities;
 };
