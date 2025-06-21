@@ -6,6 +6,13 @@ static void Update_Character(Entity& entity, bool collision, float deltaTime)
 {
 	if (collision)
 	{
+		Vector2 acceleration = Vector2Scale(entity.Acceleration, deltaTime);
+		Vector2 newVelocity = Vector2Add(Vector2{ entity.Velocity.x, -0.25f }, acceleration);
+		
+		Vector2 newPosition = Vector2Add(entity.Position, newVelocity);
+		
+		entity.Velocity = newVelocity;
+		entity.Position = newPosition;
 		return;
 	}
 
@@ -27,7 +34,9 @@ static bool CheckCollision_Character(Entity& character, const std::vector<Entity
 			continue;
 		}
 
-		if (CheckCollisionRecs(character.GetRectangle(), entities[i].GetRectangle()))
+		if (CheckCollisionRecs(character.GetRectangle(), entities[i].GetRectangle()) &&
+			character.Solid && entities[i].Solid &&
+			character.Position.y < entities[i].Position.y)
 		{
 			return true;
 		}
