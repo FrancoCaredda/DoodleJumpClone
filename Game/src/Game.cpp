@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Physics.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -26,29 +27,40 @@ void Game::Init()
 	m_Enitities.reserve(10);
 
 	m_Enitities.emplace_back(Entity{
-		Vector2{ width / 2.0f, 0.0f },
+		Vector2{ 0.5f, 0.5f },
 		Vector2{ 0.5f, 0.5f },
 		0.0f,
 		&Spritesheet::Doodle1,
 		Vector2{ 0.0f, 0.0f },
-		Vector2{ 0.0f, 0.5f },
+		Vector2{ 0.0f, 0.0005f },
 		true,
 		EntityType::Character
 	});
 
-	for (int i = 0; i < 10; i++)
-	{
-		m_Enitities.emplace_back(Entity{
-			Vector2{ static_cast<float>(rand() % width), static_cast<float>(rand() % height) },
-			Vector2{ 0.5f, 0.5f },
-			0.0f,
-			&Spritesheet::Platform1,
-			Vector2{ 0.0f, 0.0f },
-			Vector2{ 0.0f, 0.0 },
-			true,
-			EntityType::Platform
-		});
-	}
+	m_Enitities.emplace_back(Entity{
+		Vector2{ 0.5f, 0.95f },
+		Vector2{ 0.5f, 0.5f },
+		0.0f,
+		&Spritesheet::Platform1,
+		Vector2{ 0.0f, 0.0f },
+		Vector2{ 0.0f, 0.0 },
+		true,
+		EntityType::Platform
+	});
+
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	m_Enitities.emplace_back(Entity{
+	//		Vector2{ static_cast<float>(rand() % width) / width, static_cast<float>(rand() % height) / height },
+	//		Vector2{ 0.5f, 0.5f },
+	//		0.0f,
+	//		&Spritesheet::Platform1,
+	//		Vector2{ 0.0f, 0.0f },
+	//		Vector2{ 0.0f, 0.0 },
+	//		true,
+	//		EntityType::Platform
+	//	});
+	//}
 
 	
 }
@@ -84,9 +96,8 @@ void Game::UpdateLogic(float deltaTime)
 		switch (entity.Type)
 		{
 		case EntityType::Character:
-			collision = CheckCollision_Character(entity);
-			movement = GetMovement_Character();
-			Update_Character(entity, movement, collision, deltaTime);
+			ApplyGravity(entity, deltaTime);
+			Update_Character(entity, deltaTime);
 			break;
 		default:
 			break;
@@ -94,46 +105,22 @@ void Game::UpdateLogic(float deltaTime)
 	}
 }
 
-void Game::Update_Character(Entity& entity, const Vector2& movementDirection, bool collision, float deltaTime)
+void Game::Update_Character(Entity& entity, float deltaTime)
 {
-	Vector2 newAcceleration = Vector2Add(entity.Acceleration, movementDirection);
-	Vector2 currentAcceleration = Vector2Scale(newAcceleration, deltaTime);
+	bool collision = false;
+	for (const Entity& currentEntity : m_Enitities)
+	{
+		if (currentEntity.Type != entity.Type)
+		{
+			collision = CheckCollision(entity, currentEntity, 1200, 900);
+			break;
+		}
+	}
 
 	if (collision)
 	{
-		Vector2 newVelocity = Vector2Add(Vector2{ entity.Velocity.x, -0.25f }, currentAcceleration);
-		Vector2 newPosition = Vector2Add(entity.Position, newVelocity);
-
-		entity.Velocity = newVelocity;
-		entity.Position = newPosition;
-		return;
-	}
-
-	Vector2 newVelocity = Vector2Add(entity.Velocity, currentAcceleration);
-	Vector2 newPosition = Vector2Add(entity.Position, newVelocity);
-
-	entity.Velocity = newVelocity;
-	entity.Position = newPosition;
-}
-
-bool Game::CheckCollision_Character(Entity& character)
-{
-	for (int i = 0; i < m_Enitities.size(); i++)
-	{
-		if (character.Type == m_Enitities[i].Type)
-		{
-			continue;
-		}
-
-		if (CheckCollisionRecs(character.GetRectangle(), m_Enitities[i].GetRectangle()) &&
-			character.Solid && m_Enitities[i].Solid &&
-			character.Position.y < m_Enitities[i].Position.y)
-		{
-			return true;
-		}
-	}
-
-	return false;
+		entity.Velocity.y = -0.00035f;
+	}	
 }
 
 Vector2 Game::GetMovement_Character()

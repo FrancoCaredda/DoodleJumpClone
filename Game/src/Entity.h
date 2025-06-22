@@ -32,14 +32,4 @@ struct Entity
 
 	// Game Logic
 	EntityType Type;
-
-	inline Rectangle GetRectangle() const
-	{
-		return Rectangle{
-			Position.x - pSprite->Size.x * Scale.x / 2.0f, Position.y - pSprite->Size.y * Scale.y / 2.0f ,
-			pSprite->Size.x * Scale.x, pSprite->Size.y * Scale.y 
-		};
-	}
 };
-
-void UpdateLogic(std::vector<Entity>& entities, float deltaTime);
