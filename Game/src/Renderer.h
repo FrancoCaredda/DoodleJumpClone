@@ -14,14 +14,16 @@ public:
 	Renderer(Renderer&&) noexcept = delete;
 	~Renderer() = default;
 
-	void RenderBackground();
-	void RenderEntity(const Entity& entity, 
-		const Spritesheet& spritesheet);
-	void RenderEntities(const std::vector<Entity>& entities, 
-		const Spritesheet& spritesheet);
-	void RenderRectangles(const std::vector<Entity>& entities); 
+	void RenderFrame(const Camera2D& camera, const std::vector<Entity>& entities, const Spritesheet& spritesheet);
 private:
 	void BakeBackground();
+
+	void RenderBackground();
+	void RenderEntity(const Entity& entity,
+		const Spritesheet& spritesheet);
+	void RenderEntities(const std::vector<Entity>& entities,
+		const Spritesheet& spritesheet);
+	void RenderRectangles(const std::vector<Entity>& entities);
 private:
 	uint32_t m_FramebufferWidth;
 	uint32_t m_FramebufferHeight;

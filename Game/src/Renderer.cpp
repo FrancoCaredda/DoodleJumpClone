@@ -18,7 +18,7 @@ void Renderer::RenderEntity(const Entity& entity, const Spritesheet& spritesheet
 		spritesheet.GetTexture(),
 		Rectangle{ entity.pSprite->Offset.x, entity.pSprite->Offset.y,
 				   entity.pSprite->Size.x, entity.pSprite->Size.y },
-		Rectangle{ entity.Position.x * m_FramebufferWidth, entity.Position.y * m_FramebufferHeight,
+		Rectangle{ entity.Position.x, entity.Position.y,
 				  entity.pSprite->Size.x * entity.Scale.x, entity.pSprite->Size.y * entity.Scale.y },
 		Vector2{ entity.pSprite->Size.x * entity.Scale.x / 2.0f, entity.pSprite->Size.y * entity.Scale.y / 2.0f },
 		entity.Rotation,
@@ -39,13 +39,28 @@ void Renderer::RenderRectangles(const std::vector<Entity>& entities)
 	for (const Entity& entity : entities)
 	{
 		DrawRectangleLines(
-			(entity.Position.x * m_FramebufferWidth) - (entity.pSprite->Size.x * entity.Scale.x / 2.0f),
-			(entity.Position.y * m_FramebufferHeight) - (entity.pSprite->Size.y * entity.Scale.y / 2.0f),
+			(entity.Position.x) - (entity.pSprite->Size.x * entity.Scale.x / 2.0f),
+			(entity.Position.y) - (entity.pSprite->Size.y * entity.Scale.y / 2.0f),
 			entity.pSprite->Size.x * entity.Scale.x,
 			entity.pSprite->Size.y * entity.Scale.y,
 			Color{ 255, 0, 0, 255 }
 		);
 	}
+}
+
+void Renderer::RenderFrame(const Camera2D& camera, const std::vector<Entity>& entities, const Spritesheet& spritesheet)
+{
+	BeginDrawing();
+	ClearBackground(Color{});
+
+	RenderBackground();
+	BeginMode2D(camera);
+	RenderEntities(entities, spritesheet);
+	RenderRectangles(entities);
+	EndMode2D();
+	DrawFPS(0, 0);
+
+	EndDrawing();
 }
 
 void Renderer::BakeBackground()

@@ -22,9 +22,16 @@ private:
 
 	void UpdateLogic(float deltaTime);
 	void Update_Character(Entity& entity, float deltaTime);
+	void Update_Camera(const Entity& player, float deltaTime);
+	void Update_Platform(const Entity& platform, float deltaTime);
+
 	Vector2 GetMovement_Character();
 private:
+	uint32_t m_Width = 1200, m_Height = 900;
+	
 	Spritesheet m_Spritesheet;
-	Renderer m_Renderer{1200, 900};
+	Renderer m_Renderer{ m_Width, m_Height };
+	Camera2D m_Camera{};
+
 	std::vector<Entity> m_Enitities;
 };

@@ -16,10 +16,10 @@ void ApplyGravity(Entity& entity, float deltaTime)
 static Rectangle CalculateBoundingBox(const Entity& entity, uint32_t width, uint32_t height)
 {
 	return Rectangle{
-		(entity.Position.x * width) - (entity.pSprite->Size.x * entity.Scale.x / 2.0f),
-		(entity.Position.y * height) - (entity.pSprite->Size.y * entity.Scale.y / 2.0f),
-		entity.pSprite->Size.x* entity.Scale.x,
-		entity.pSprite->Size.y* entity.Scale.y
+		(entity.Position.x) - (entity.pSprite->Size.x * entity.Scale.x / 2.0f),
+		(entity.Position.y) - (entity.pSprite->Size.y * entity.Scale.y / 2.0f),
+		entity.pSprite->Size.x * entity.Scale.x,
+		entity.pSprite->Size.y * entity.Scale.y
 	};
 }
 
