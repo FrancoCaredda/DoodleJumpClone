@@ -144,6 +144,7 @@ void Game::Update_Character(Entity& entity, float deltaTime)
 	if (entity.Position.y < m_Height / 2.0f && entity.Velocity.y < 0)
 	{
 		m_PlatformScroll += -entity.Velocity.y * deltaTime;
+		entity.Position.y += m_PlatformScroll;
 	}
 	else
 	{
@@ -153,12 +154,11 @@ void Game::Update_Character(Entity& entity, float deltaTime)
 
 void Game::Update_Platform(Entity& platform, const Entity& player, float deltaTime)
 {
-	std::cout << m_PlatformScroll << "\n";
 	platform.Position.y += m_PlatformScroll;
 
 	if (platform.Position.y > m_Height)
 	{
-		platform.Position.y = player.Position.y - (rand() % (m_Height / 4));
+		platform.Position.y = player.Position.y - (rand() % 150);
 	}
 }
 
