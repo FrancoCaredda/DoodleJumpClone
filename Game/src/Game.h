@@ -22,8 +22,7 @@ private:
 
 	void UpdateLogic(float deltaTime);
 	void Update_Character(Entity& entity, float deltaTime);
-	void Update_Camera(const Entity& player, float deltaTime);
-	void Update_Platform(const Entity& platform, float deltaTime);
+	void Update_Platform(Entity& platform, const Entity& player, float deltaTime);
 
 	Vector2 GetMovement_Character();
 private:
@@ -31,7 +30,8 @@ private:
 	
 	Spritesheet m_Spritesheet;
 	Renderer m_Renderer{ m_Width, m_Height };
-	Camera2D m_Camera{};
+
+	float m_PlatformScroll = 0;
 
 	std::vector<Entity> m_Enitities;
 };

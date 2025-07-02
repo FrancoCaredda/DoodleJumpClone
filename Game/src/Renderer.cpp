@@ -48,16 +48,14 @@ void Renderer::RenderRectangles(const std::vector<Entity>& entities)
 	}
 }
 
-void Renderer::RenderFrame(const Camera2D& camera, const std::vector<Entity>& entities, const Spritesheet& spritesheet)
+void Renderer::RenderFrame(const std::vector<Entity>& entities, const Spritesheet& spritesheet)
 {
 	BeginDrawing();
 	ClearBackground(Color{});
 
 	RenderBackground();
-	BeginMode2D(camera);
 	RenderEntities(entities, spritesheet);
 	RenderRectangles(entities);
-	EndMode2D();
 	DrawFPS(0, 0);
 
 	EndDrawing();

@@ -14,7 +14,7 @@ public:
 	Renderer(Renderer&&) noexcept = delete;
 	~Renderer() = default;
 
-	void RenderFrame(const Camera2D& camera, const std::vector<Entity>& entities, const Spritesheet& spritesheet);
+	void RenderFrame(const std::vector<Entity>& entities, const Spritesheet& spritesheet);
 private:
 	void BakeBackground();
 

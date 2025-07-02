@@ -25,7 +25,7 @@ static Rectangle CalculateBoundingBox(const Entity& entity, uint32_t width, uint
 
 bool CheckCollision(const Entity& entity1, const Entity& entity2, uint32_t width, uint32_t height)
 {
-	if (!entity1.Solid || !entity2.Solid)
+	if (!entity1.Solid || !entity2.Solid || entity1.Velocity.y < 0.0f)
 	{
 		return false;
 	}

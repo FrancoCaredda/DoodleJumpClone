@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <chrono>
+#include <iostream>
 
 void Game::Run()
 {
@@ -62,11 +63,6 @@ void Game::Init()
 			EntityType::Platform
 			});
 	}
-
-	m_Camera.target.x = 600;
-	m_Camera.target.y = 450;
-	m_Camera.offset = Vector2{ m_Width / 2.0f, m_Height / 2.0f };
-	m_Camera.zoom = 1.0f;
 }
 
 void Game::RunLoop()
@@ -74,7 +70,7 @@ void Game::RunLoop()
 	while (!WindowShouldClose())
 	{
 		UpdateLogic(GetFrameTime());
-		m_Renderer.RenderFrame(m_Camera, m_Enitities, m_Spritesheet);
+		m_Renderer.RenderFrame(m_Enitities, m_Spritesheet);
 	}
 }
 
@@ -100,15 +96,15 @@ void Game::UpdateLogic(float deltaTime)
 			player = &entity;
 			break;
 		case EntityType::Platform:
-
+			if (player)
+			{
+				Update_Platform(entity, *player, deltaTime);
+			}
+			break;
 		default:
+
 			break;
 		}
-	}
-
-	if (player)
-	{
-		Update_Camera(*player, deltaTime);
 	}
 }
 
@@ -144,13 +140,25 @@ void Game::Update_Character(Entity& entity, float deltaTime)
 	{
 		entity.Position.x = m_Width;
 	}
+
+	if (entity.Position.y < m_Height / 2.0f && entity.Velocity.y < 0)
+	{
+		m_PlatformScroll += -entity.Velocity.y * deltaTime;
+	}
+	else
+	{
+		m_PlatformScroll = 0;
+	}
 }
 
-void Game::Update_Camera(const Entity& player, float deltaTime)
+void Game::Update_Platform(Entity& platform, const Entity& player, float deltaTime)
 {
-	if (player.Position.y < (m_Camera.target.y - ((m_Height - 50.0f) / 2.0f)))
+	std::cout << m_PlatformScroll << "\n";
+	platform.Position.y += m_PlatformScroll;
+
+	if (platform.Position.y > m_Height)
 	{
-		m_Camera.target.y -= 450.0f * deltaTime;
+		platform.Position.y = player.Position.y - (rand() % (m_Height / 4));
 	}
 }
 
