@@ -1,5 +1,4 @@
 #include "Game.h"
-#include "Physics.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -30,10 +29,12 @@ void Game::Init()
 	m_Enitities.emplace_back(Entity{
 		Vector2{ 600, 450 },
 		Vector2{ 0.5f, 0.5f },
-		0.0f,
 		&Spritesheet::Doodle1,
-		Vector2{ 0.0f, 0.0f },
+		Vector2{ 10.0f, 0.0f },
 		Vector2{ 0.0f, 40.0f },
+		20.0f,
+		true,
+		true,
 		true,
 		EntityType::Character
 	});
@@ -42,11 +43,13 @@ void Game::Init()
 	m_Enitities.emplace_back(Entity{
 		Vector2{ 600, 800 },
 		Vector2{ 0.5f, 0.5f },
-		0.0f,
 		&Spritesheet::Platform1,
 		Vector2{ 0.0f, 0.0f },
 		Vector2{ 0.0f, 0.0 },
+		0.0f,
 		true,
+		false,
+		false,
 		EntityType::Platform
 	});
 
@@ -55,13 +58,15 @@ void Game::Init()
 		m_Enitities.emplace_back(Entity{
 			Vector2{ static_cast<float>(rand() % m_Width), static_cast<float>(rand() % m_Height) },
 			Vector2{ 0.5f, 0.5f },
-			0.0f,
 			&Spritesheet::Platform1,
 			Vector2{ 0.0f, 0.0f },
 			Vector2{ 0.0f, 0.0 },
+			0.0f,
 			true,
+			false,
+			false,
 			EntityType::Platform
-			});
+		});
 	}
 }
 
@@ -81,99 +86,37 @@ void Game::Close()
 
 void Game::UpdateLogic(float deltaTime)
 {
-	bool collision = false;
-	Vector2 movement = Vector2{ 0.0f, 0.0f };
+	static Vector2 position{};
+	static Vector2 velocity{};
 
-	Entity* player = nullptr;
+
+	if (position.y < m_Height / 2.0f && velocity.y < 0)
+	{
+		m_Scroll += -velocity.y * 1.75f * deltaTime;
+	}
+	else
+	{
+		m_Scroll = 0;
+	}
+
+	UpdateScroll(m_Enitities, m_Scroll);
 
 	for (Entity& entity : m_Enitities)
 	{
 		switch (entity.Type)
 		{
 		case EntityType::Character:
+			position = entity.Position;
+			velocity = entity.Velocity;
 			ApplyGravity(entity, deltaTime);
-			Update_Character(entity, deltaTime);
-			player = &entity;
+			UpdateCharacter(entity, m_Enitities, m_Width, deltaTime);
 			break;
 		case EntityType::Platform:
-			if (player)
-			{
-				Update_Platform(entity, *player, deltaTime);
-			}
+			UpdatePlatform(entity, position, m_Height);
 			break;
 		default:
-
 			break;
 		}
 	}
 }
 
-void Game::Update_Character(Entity& entity, float deltaTime)
-{
-	bool collision = false;
-	for (const Entity& currentEntity : m_Enitities)
-	{
-		if (currentEntity.Type != entity.Type)
-		{
-			if (collision = CheckCollision(entity, currentEntity, 1200, 900))
-			{
-				break;
-			}
-		}
-	}
-
-	Vector2 direction = GetMovement_Character();
-	entity.Acceleration.x = direction.x;
-
-	if (collision)
-	{
-		//					acceleration * 2.0f * height
-		entity.Velocity.y = -std::sqrtf(entity.Acceleration.y * 2.0f * 10.0f);
-	}
-
-	if (entity.Position.x > m_Width)
-	{
-		entity.Position.x = 0;
-	}
-	
-	if (entity.Position.x < 0)
-	{
-		entity.Position.x = m_Width;
-	}
-
-	if (entity.Position.y < m_Height / 2.0f && entity.Velocity.y < 0)
-	{
-		m_PlatformScroll += -entity.Velocity.y * deltaTime;
-		entity.Position.y += m_PlatformScroll;
-	}
-	else
-	{
-		m_PlatformScroll = 0;
-	}
-}
-
-void Game::Update_Platform(Entity& platform, const Entity& player, float deltaTime)
-{
-	platform.Position.y += m_PlatformScroll;
-
-	if (platform.Position.y > m_Height)
-	{
-		platform.Position.y = player.Position.y - (rand() % 150);
-	}
-}
-
-Vector2 Game::GetMovement_Character()
-{
-	static Vector2 Right{ 30.0f, 0.0f };
-
-	if (IsKeyDown(KEY_D))
-	{
-		return Right;
-	}
-	if (IsKeyDown(KEY_A))
-	{
-		return Vector2Scale(Right, -1);
-	}
-
-	return Vector2Scale(Right, 0.0f);
-}
