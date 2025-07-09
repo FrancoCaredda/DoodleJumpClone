@@ -1,7 +1,17 @@
-#include <iostream>
+#include "Game.h"
+
+#ifdef _DEBUG
+#include <filesystem>
+#endif // _DEBUG
 
 int main(int argc, char** argv)
 {
-    std::cout << "Hello world!" << std::endl;
+#ifdef _DEBUG
+    std::filesystem::current_path(SOURCE_DIR);
+#endif // _DEBUG
+
+    Game game;
+    game.Run();
+
     return 0;
 }
