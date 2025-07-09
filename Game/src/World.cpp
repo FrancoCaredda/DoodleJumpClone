@@ -15,8 +15,7 @@ void World::Init()
 		true,
 		true,
 		EntityType::Character
-		});
-
+	});
 
 	m_Entities.emplace_back(Entity{
 		Vector2{ 600, 800 },
@@ -29,7 +28,7 @@ void World::Init()
 		false,
 		false,
 		EntityType::Platform
-		});
+	});
 
 	for (int i = 0; i < 9; i++)
 	{

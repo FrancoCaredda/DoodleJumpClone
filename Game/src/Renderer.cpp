@@ -61,6 +61,15 @@ void Renderer::RenderFrame(const std::vector<Entity>& entities, const Spriteshee
 	EndDrawing();
 }
 
+void Renderer::RenderGameOverScreen()
+{
+	BeginDrawing();
+	ClearBackground(Color{ 255, 255, 255, 255 });
+	DrawText("You've lost", m_FramebufferWidth / 2 - 6 * 24 / 2, m_FramebufferHeight / 2 - 12, 24, Color{ 0, 0, 0, 255 });
+	DrawText("Press any key to continue", m_FramebufferWidth / 2 - 13 * 24 / 2, m_FramebufferHeight / 2 + 12, 24, Color{ 0, 0, 0, 255 });
+	EndDrawing();
+}
+
 void Renderer::BakeBackground()
 {
 	m_BackgroundFramebuffer = LoadRenderTexture(m_FramebufferWidth, m_FramebufferHeight);

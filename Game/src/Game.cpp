@@ -5,8 +5,6 @@
 
 #include <cstdint>
 #include <cstdlib>
-#include <chrono>
-#include <iostream>
 
 void Game::Run()
 {
@@ -31,8 +29,21 @@ void Game::RunLoop()
 {
 	while (!WindowShouldClose())
 	{
-		m_World.Update(GetFrameTime());
-		m_Renderer.RenderFrame(m_World.GetEntities(), m_Spritesheet);
+		if (!m_World.LoseConditionMet())
+		{
+			m_World.Update(GetFrameTime());
+			m_Renderer.RenderFrame(m_World.GetEntities(), m_Spritesheet);
+		}
+		else
+		{
+			m_Renderer.RenderGameOverScreen();
+
+			if (GetCharPressed())
+			{
+				m_World.CleanUp();
+				m_World.Init();
+			}
+		}
 	}
 }
 

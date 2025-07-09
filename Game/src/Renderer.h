@@ -15,6 +15,7 @@ public:
 	~Renderer() = default;
 
 	void RenderFrame(const std::vector<Entity>& entities, const Spritesheet& spritesheet);
+	void RenderGameOverScreen();
 private:
 	void BakeBackground();
 

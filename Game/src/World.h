@@ -19,6 +19,7 @@ public:
 	void Update(float deltaTime);
 	void CleanUp();
 
+	inline bool LoseConditionMet() const { return m_Entities[0].Position.y > m_VerticalBounds.y; }
 	inline const std::vector<Entity>& GetEntities() const { return m_Entities; }
 private:
 	void ApplyGravity(Entity& entity, float deltaTime);
