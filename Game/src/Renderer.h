@@ -14,7 +14,7 @@ public:
 	Renderer(Renderer&&) noexcept = delete;
 	~Renderer() = default;
 
-	void RenderFrame(const std::vector<Entity>& entities, const Spritesheet& spritesheet);
+	void RenderFrame(const std::vector<Entity>& entities, int score, const Spritesheet& spritesheet);
 	void RenderGameOverScreen();
 private:
 	void BakeBackground();

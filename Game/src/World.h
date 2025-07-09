@@ -20,7 +20,9 @@ public:
 	void CleanUp();
 
 	inline bool LoseConditionMet() const { return m_Entities[0].Position.y > m_VerticalBounds.y; }
+
 	inline const std::vector<Entity>& GetEntities() const { return m_Entities; }
+	inline int GetScore() const { return m_Score; }
 private:
 	void ApplyGravity(Entity& entity, float deltaTime);
 	void ApplyMovement(Entity& entity, float direction, float deltaTime);
@@ -30,14 +32,18 @@ private:
 
 	bool HasEntityCollidedWithWorld(Entity& entity);
 
-	void UpdateScroll();
+	void UpdateScroll(float deltaTime);
 	void UpdateCharacter(Entity& entity, float deltaTime);
 	void UpdatePlatform(Entity& platform, const Vector2& spawnPosition);
 private:
 	Vector2 m_HorizontalBounds;
 	Vector2 m_VerticalBounds;
 
+	const float m_ScrollSpeed = 1.75f;
+	const float m_ScoreAcceptanceTime = 0.5f;
 	float m_Scroll = 0;
+
+	int m_Score = 0;
 
 	std::vector<Entity> m_Entities;
 };

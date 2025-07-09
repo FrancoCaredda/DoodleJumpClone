@@ -2,6 +2,8 @@
 
 #include "raylib.h"
 
+#include <string>
+
 void Renderer::RenderBackground()
 {
 	if (!IsRenderTextureValid(m_BackgroundFramebuffer))
@@ -48,15 +50,20 @@ void Renderer::RenderRectangles(const std::vector<Entity>& entities)
 	}
 }
 
-void Renderer::RenderFrame(const std::vector<Entity>& entities, const Spritesheet& spritesheet)
+void Renderer::RenderFrame(const std::vector<Entity>& entities, int score, const Spritesheet& spritesheet)
 {
 	BeginDrawing();
 	ClearBackground(Color{});
 
 	RenderBackground();
 	RenderEntities(entities, spritesheet);
+#ifdef _DEBUG
 	RenderRectangles(entities);
-	DrawFPS(0, 0);
+#endif // _DEBUG
+
+
+	std::string scoreString = "Your score: " + std::to_string(score);
+	DrawText(scoreString.c_str(), 5, 15, 24, Color{ 0, 0, 0, 255 });
 
 	EndDrawing();
 }

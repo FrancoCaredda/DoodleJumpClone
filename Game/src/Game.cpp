@@ -32,7 +32,7 @@ void Game::RunLoop()
 		if (!m_World.LoseConditionMet())
 		{
 			m_World.Update(GetFrameTime());
-			m_Renderer.RenderFrame(m_World.GetEntities(), m_Spritesheet);
+			m_Renderer.RenderFrame(m_World.GetEntities(), m_World.GetScore(), m_Spritesheet);
 		}
 		else
 		{
