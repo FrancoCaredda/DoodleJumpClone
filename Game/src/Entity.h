@@ -38,15 +38,4 @@ struct Entity
 	EntityType Type;
 };
 
-void ApplyGravity(Entity& entity, float deltaTime);
-void ApplyMovement(Entity& entity, float direction, float deltaTime);
-void ApplyBounciness(Entity& entity);
-
-bool CheckCollision(const Entity& entity1, const Entity& entity2);
-
-bool HasEntityCollidedWithEntity(Entity& entity, const std::vector<Entity>& entities);
-
-void UpdateScroll(std::vector<Entity>& entities, float scroll);
-void UpdateCharacter(Entity& entity, const std::vector<Entity>& entities, uint32_t movementBound, float deltaTime);
-void UpdatePlatform(Entity& platform, const Vector2& spawnPosition, uint32_t upperBound);
 
