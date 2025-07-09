@@ -20,8 +20,7 @@ void Game::Init()
 	InitWindow(m_Width, m_Height, "Doodle Jump Clone");
 	SetTargetFPS(60);
 
-	m_Spritesheet.Load("../../../../Assets/spritesheet.png");
-
+	m_Spritesheet.Load("Assets/spritesheet.png");
 	m_World.Init();
 }
 
